@@ -56,7 +56,7 @@ namespace TrumpCars.Models
         public List<TrumpCard> GetCards()
         {
             var cards = _context.Vehicles
-                .Where(v => v.Id != 1 && v.Id != 2)
+                .Where(v => v.VehicleCharacteristics.Count() > 4)
                 .OrderBy(c => Guid.NewGuid())
                 .Take(MaxPlayers*CardCount)
                 .Select(v => new TrumpCard
@@ -86,9 +86,11 @@ namespace TrumpCars.Models
             var activePlayer = group.Players.First(p=>p.IsPlayersTurn);
             var redundantCheck = activePlayer.PlayerId == playerId;
             var activeCard = activePlayer.TrumpCards.First(c => c.IsActive);
+            activeCard.CarCharacteristics.First(cc => cc.Name == name).IsPicked = true;
 
             var opponentPlayer = group.Players.First(p => !p.IsPlayersTurn);
             var opponentActiveCard = opponentPlayer.TrumpCards.First(c => c.IsActive);
+            opponentActiveCard.CarCharacteristics.First(cc => cc.Name == name).IsPicked = true;
 
             if (activeCard.CarCharacteristics.First(cc => cc.Name == name).Value >
                 opponentActiveCard.CarCharacteristics.First(cc => cc.Name == name).Value)
@@ -101,7 +103,6 @@ namespace TrumpCars.Models
             {
                 opponentPlayer.Score++;
                 opponentActiveCard.Win = true;
-                opponentActiveCard.CarCharacteristics.First(cc => cc.Name == name).IsPicked = true;
             }
             else
             {
@@ -121,9 +122,13 @@ namespace TrumpCars.Models
 
             activePlayer.IsPlayersTurn = false;
             activeCard.Finished = true;
+            activeCard.IsActive = false;
+            activeCard.CarCharacteristics.First(cc => cc.IsPicked).IsPicked = false;
 
             opponentPlayer.IsPlayersTurn = true;
             opponentActiveCard.Finished = true;
+            opponentActiveCard.IsActive = false;
+            opponentActiveCard.CarCharacteristics.First(cc => cc.IsPicked).IsPicked = false;
         }
 
         public string GetClientData(string groupName, string playerId)
@@ -154,7 +159,7 @@ namespace TrumpCars.Models
                         myTurn = playerData.IsPlayersTurn,
                         myCard = activeCard == null ? null : new
                         {
-                            Result = opponentsActiveCard == null ? "" : (activeCard.Win ? "Win" : (groupData.IsDraw ? "Draw" : "Loose")),
+                            Result = opponentsActiveCard == null ? "" : (activeCard.Win ? "Win" : (groupData.IsDraw ? "Draw" : "Lose")),
                             activeCard.Id,
                             activeCard.Title,
                             activeCard.ImageUrl,
@@ -167,7 +172,7 @@ namespace TrumpCars.Models
                         },
                         opponentsCard = opponentsActiveCard == null ? null : new
                         {
-                            Result = opponentsActiveCard.Win ? "Win" : (groupData.IsDraw ? "Draw" : "Loose"),
+                            Result = opponentsActiveCard.Win ? "Win" : (groupData.IsDraw ? "Draw" : "Lose"),
                             opponentsActiveCard.Id,
                             opponentsActiveCard.Title,
                             opponentsActiveCard.ImageUrl,

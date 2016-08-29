@@ -67,7 +67,7 @@
     render: function () {
         var that = this;
         return (
-            that.state.inGame
+            this.state.inGame
             ?
             <div className="room">
                 <div className="table clearfix">
@@ -79,20 +79,25 @@
                     <div className="card-wrapper">
                         <h3>Your Opponent's Card</h3>
                         {
-                        that.state.currentGame.thisRound.opponentsCard
+                        this.state.currentGame.thisRound.opponentsCard != null
                         ?
-                        <Card {...that.state.currentGame.thisRound.opponentsCard} Active={false} />
+                        <Card {...this.state.currentGame.thisRound.opponentsCard} Active={false} />
                         :
                         <div className="compare-card">?</div>
                         }
                     </div>
                 </div>
                 <div className="message-bar">{
-                    this.state.currentGame.thisRound.opponentsCard
-                    ? <a href="#" onClick={that.onNextRoundClick.bind(that, that.state.roomName)}>Next Round</a>
+                    this.state.currentGame.thisRound.opponentsCard != null
+                    ?
+                    (
+                        this.state.currentGame.isGameFinished
+                        ? "Game Finished"
+                        : <a href="#" onClick={this.onNextRoundClick.bind(this, this.state.roomName) }>Next Round</a>
+                    )
                     :
                     (
-                        that.state.currentGame.thisRound.myTurn
+                        this.state.currentGame.thisRound.myTurn
                         ? 'It is your turn.'
                         : 'Waiting for your opponent to pick.'
                     )
@@ -100,8 +105,8 @@
                 </div>
                 <div className="status-bar">
                     <span>Wins</span>
-                    <span className="status-bar__score status-bar__score_your">{that.state.currentGame.thisRound.myScore}</span>
-                    <span className="status-bar__score status-bar__score_opponent">{that.state.currentGame.thisRound.opponentsScore}</span>
+                    <span className="status-bar__score status-bar__score_your">{this.state.currentGame.thisRound.myScore}</span>
+                    <span className="status-bar__score status-bar__score_opponent">{this.state.currentGame.thisRound.opponentsScore}</span>
                 </div>
             </div>
             :
