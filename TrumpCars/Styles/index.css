@@ -102,12 +102,11 @@
 }
 .card__character {
     list-style: none;
-    padding: 0;
-    margin: 0;
-    height: 50px;
-    line-height: 50px;
-    border-top: 1px solid #e5e5e5;
+    height: 40px;
+    line-height: 40px;
+    border: 1px solid #e5e5e5;
     padding: 0 15px;
+    margin: 5px 10px;
 }
 .card__character__name {
     float: left;
@@ -135,18 +134,27 @@
     box-sizing: content-box;
 }
 .message-bar {
-    border: 1px solid #ddd;
+    height: 50px;
+    line-height: 50px;
+    font-size: 25px;
+    background-color: lightblue;
+    color: red;
+    text-align: center;
 }
 .status-bar span {
     display: inline-block
 }
+.status-bar {
+    margin-top: 20px;
+}
 .status-bar__score {
-    width: 50px;
-    height: 40px;
-    line-height: 40px;
+    width: 100px;
+    height: 50px;
+    line-height: 50px;
     border: 1px solid #ddd;
     font-size: 30px;
-    margin-left: 10px;
+    margin-left: 20px;
+    text-align: center;
 }
 .status-bar__score_your {
     background-color: red;
