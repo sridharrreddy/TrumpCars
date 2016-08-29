@@ -11,5 +11,7 @@ namespace TrumpCars.Models
         public string Title { get; set; }
         public string ImageUrl { get; set; }
         public List<CarCharacteristic> CarCharacteristics { get; set; }
+        public bool Finished { get; set; }
+        public bool IsActive { get; set; }
     }
 }

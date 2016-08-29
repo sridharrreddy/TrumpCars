@@ -39,6 +39,7 @@ namespace TrumpCars.Models
                 foreach (var playerGameData in group.Players)
                 {
                     playerGameData.TrumpCards = trumpCards.Skip(playerIndex*CardCount).Take(CardCount).ToList();
+                    playerGameData.TrumpCards.First().IsActive = true;
                     ++playerIndex;
                 }
             }
@@ -52,16 +53,23 @@ namespace TrumpCars.Models
 
         public List<TrumpCard> GetCards()
         {
-            var cards = _context.Vehicles.Take(MaxPlayers * CardCount).Select(v => new TrumpCard
+            var cards = _context.Vehicles.Take(MaxPlayers*CardCount).Select(v => new TrumpCard
             {
                 Id = v.Id,
                 Title = v.MakeModel,
                 ImageUrl = v.ImageUrl,
-                CarCharacteristics = v.VehicleCharacteristics.Select(vc => new CarCharacteristic
-                {
-                    Name = vc.Characteristic.Name,
-                    Value = vc.Value
-                }).ToList()
+                Finished = false,
+                CarCharacteristics = v.VehicleCharacteristics
+                    .Where(vc => vc.Characteristic.Name == "Price (AUD)"
+                                 || vc.Characteristic.Name == "Engine Size (cc)"
+                                 || vc.Characteristic.Name == "Fuel Star Rating"
+                                 || vc.Characteristic.Name == "Performance"
+                                 || vc.Characteristic.Name == "Boot Space Score")
+                    .Select(vc => new CarCharacteristic
+                    {
+                        Name = vc.Characteristic.Name,
+                        Value = vc.Value
+                    }).ToList()
             }).ToList();
             return cards;
         }

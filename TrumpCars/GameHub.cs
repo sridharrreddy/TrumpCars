@@ -12,9 +12,10 @@ namespace TrumpCars
 {
     public class GameHub : Hub
     {
-        public void FeaturePick(string roomName, string name, int value)
+        public void CharacteristicPick(string roomName, int carId, string name, int value)
         {
-            Clients.OthersInGroup(roomName).addChatMessage(name, value);
+            Clients.OthersInGroup(roomName).compareCharacteristic(name, value);
+
         }
 
         public async Task JoinRoom(string roomName)
