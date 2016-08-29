@@ -220,6 +220,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AddPlayerResult.cs" />
     <Compile Include="Models\CarCharacteristic.cs" />
     <Compile Include="Models\GameData.cs" />
     <Compile Include="Models\GroupData.cs" />
@@ -271,11 +272,11 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Game.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jsx\game.jsx" />
     <Content Include="Scripts\Tutorial.jsx" />
+    <Content Include="Scripts\jsx\grouping.jsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
