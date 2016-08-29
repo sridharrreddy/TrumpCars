@@ -10,7 +10,7 @@ namespace TrumpCars.Controllers
 {
     public class HomeController : Controller
     {
-        public static GameData GameData = new GameData { MaxPlayers = 2, CardCount = 10, Groups = new List<GroupData>() };
+        public static GameData GameData = new GameData { MaxPlayers = 2, CardCount = 5, Groups = new List<GroupData>() };
 
         public ActionResult Index()
         {
