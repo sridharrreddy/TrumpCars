@@ -1,19 +1,15 @@
 ﻿@{
-    Layout = null;
+    ViewBag.Title = "Home Page";
+}
+<input type="hidden" id="roomName" name="roomName" value="@ViewData["RoomName"]"/>
+<div id="content"></div>
+
+@section styles {
+    <link rel="stylesheet" href="@Url.Content("~/Styles/index.css")"/>
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-    <link rel="stylesheet" href="@Url.Content("~/Styles/index.css")" />
-</head>
-<body>
-    <div id="content"></div>
+@section scripts {
     <script src="https://fb.me/react-15.0.1.js"></script>
     <script src="https://fb.me/react-dom-15.0.1.js"></script>
     <script src="@Url.Content("~/Scripts/Tutorial.jsx")"></script>
-</body>
-</html>
+}
