@@ -26,7 +26,7 @@
         if (self.state.cards) {
             data = self.state.cards.map(function(card, index) {
                 return (
-                    <p>{card}</p>
+                    <img src={card.ImageUrl} />
                 );
             });
         }

@@ -26,8 +26,7 @@ namespace TrumpCars
             {
                 foreach (var playerGameData in groupData.Players)
                 {
-                    Clients.Group(result.GroupName, groupData.Players.Where(p=> p.PlayerId!= playerGameData.PlayerId).Select(p=>p.PlayerId).ToArray())
-                        .loadGame(result.GroupName, JsonConvert.SerializeObject(playerGameData.TrumpCards));
+                    Clients.Client(playerGameData.PlayerId).loadGame(result.GroupName, JsonConvert.SerializeObject(playerGameData.TrumpCards));
                 }
             }
             else
