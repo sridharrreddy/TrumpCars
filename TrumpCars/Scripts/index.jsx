@@ -70,39 +70,56 @@
             this.state.inGame
             ?
             <div className="room">
-                <div className="table clearfix">
-                    <div className="divider">VS</div>
-                    <div className="card-wrapper">
-                        <h3>Your Card</h3>
-                        <Card {...this.state.currentGame.thisRound.myCard} Active={that.state.currentGame.thisRound.myTurn} GroupName={that.state.roomName} />
-                    </div>
-                    <div className="card-wrapper">
-                        <h3>Your Opponent's Card</h3>
-                        {
-                        this.state.currentGame.thisRound.opponentsCard != null
-                        ?
-                        <Card {...this.state.currentGame.thisRound.opponentsCard} Active={false} />
-                        :
-                        <div className="compare-card">?</div>
-                        }
-                    </div>
-                </div>
-                <div className="message-bar">{
-                    this.state.currentGame.thisRound.opponentsCard != null
+                {
+                    this.state.currentGame.isGameFinished
                     ?
-                    (
-                        this.state.currentGame.isGameFinished
-                        ? "Game Finished"
-                        : <a href="#" onClick={this.onNextRoundClick.bind(this, this.state.roomName) }>Next Round</a>
-                    )
+                    <div className="lose-pic">
+                    {
+                        (this.state.currentGame.thisRound.opponentsScore > this.state.currentGame.thisRound.myScore)
+                        ?
+                        <img src="http://static.businessinsider.com/image/5603216fbd86ef20008bc9c0/image.jpg" />
+                        :
+                        <img src="http://cdn3.thr.com/sites/default/files/2015/10/donald_trump.jpg" />
+                    }
+                    </div>
                     :
-                    (
-                        this.state.currentGame.thisRound.myTurn
-                        ? 'It is your turn.'
-                        : 'Waiting for your opponent to pick.'
-                    )
+                    <div className="table-wrapper">
+                        <div className="table clearfix">
+                            <div className="divider">VS</div>
+                            <div className="card-wrapper">
+                                <h3>Your Card</h3>
+                                <Card {...this.state.currentGame.thisRound.myCard} Active={that.state.currentGame.thisRound.myTurn} GroupName={that.state.roomName} />
+                            </div>
+                            <div className="card-wrapper">
+                                <h3>Your Opponent's Card</h3>
+                                {
+                                    this.state.currentGame.thisRound.opponentsCard != null
+                                    ?
+                                    <Card {...this.state.currentGame.thisRound.opponentsCard} Active={false} />
+                                    :
+                                        <div className="compare-card">?</div>
+                                }
+                            </div>
+                        </div>
+                        <div className="message-bar">
+                            {
+                                this.state.currentGame.thisRound.opponentsCard != null
+                                ?
+                                (
+                                    this.state.currentGame.isGameFinished
+                                    ? "Game Finished"
+                                    : <a href="#" onClick={this.onNextRoundClick.bind(this, this.state.roomName) }>Next Round</a>
+                                )
+                                :
+                                (
+                                    this.state.currentGame.thisRound.myTurn
+                                    ? 'It is your turn.'
+                                    : 'Waiting for your opponent to pick.'
+                                )
+                            }
+                        </div>
+                    </div>
                 }
-                </div>
                 <div className="status-bar">
                     <span>Wins</span>
                     <span className="status-bar__score status-bar__score_your">{this.state.currentGame.thisRound.myScore}</span>

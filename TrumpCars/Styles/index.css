@@ -42,7 +42,7 @@
     padding: 0;
     position: relative;
     width: 300px;
-    height: 550px;
+    height: 520px;
     box-sizing: content-box;
 }
 .card__title {
@@ -91,7 +91,7 @@
 .compare-card {
     width: 300px;
     height: 550px;
-    line-height: 550px;
+    line-height: 520px;
     font-size: 200px;
     border: 15px solid orange;
     border-radius: 10px;
@@ -126,4 +126,7 @@
 }
 .status-bar__score_opponent {
     background-color: green;
+}
+.lose-pic img {
+    width: 400px;
 }
