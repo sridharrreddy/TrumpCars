@@ -110,7 +110,10 @@
                 </div>
             </div>
             :
-            <div>Waiting for another player to join</div>
+            <div className="waiting-to-start">
+                <div className="spinner"></div>
+                Waiting for another player to join
+            </div>
         );
     }
 });
