@@ -159,14 +159,14 @@ var Card = React.createClass({
                             return (that.props.Active && that.props.Result === "")
                             ?
                                 (
-                                    <li className={"card__character card__character_active" + (characteristic.Picked ? " card__character_picked" : "")} onClick={that.onCharacteristicClick.bind(that, that.props.GroupName, that.props.Id, characteristic.Name)}>
+                                    <li className={"card__character card__character_active" + (characteristic.IsPicked ? " card__character_picked" : "")} onClick={that.onCharacteristicClick.bind(that, that.props.GroupName, that.props.Id, characteristic.Name)}>
                                         <span className="card__character__name">{characteristic.Name}</span>
                                         <span className="card__character__value">{characteristic.Value}</span>
                                     </li>
                                 )
                             :
                                 (
-                                    <li className={"card__character" + (characteristic.Picked ? " card__character_picked" : "")}>
+                                    <li className={"card__character" + (characteristic.IsPicked ? " card__character_picked" : "")}>
                                         <span className="card__character__name">{characteristic.Name}</span>
                                         <span className="card__character__value">{characteristic.Value}</span>
                                     </li>
