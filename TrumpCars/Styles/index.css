@@ -3,6 +3,16 @@
     padding: 0;
     margin: 0;
 }
+.clearfix:after {
+     visibility: hidden;
+     display: block;
+     font-size: 0;
+     content: " ";
+     clear: both;
+     height: 0;
+     }
+.clearfix { display: inline-block; }
+
 .room {
     width: 1020px;
     margin: 0 auto;
@@ -12,16 +22,17 @@
     background-color: #fff;
     border: 1px solid #e5e5e5;
     font-size: 13px;
-    margin: 0 auto;
     padding: 0;
     position: relative;
     width: 300px;
+    height: 550px;
+    float: left;
 }
 .card__title {
     background-color: #f7f7f7;
     border-bottom: 1px solid #e5e5e5;
     height: 80px;
-    font-size: 25px;
+    font-size: 18px;
     line-height: 80px;
     text-align: center;
 }
@@ -29,7 +40,7 @@
     height: 200px;
     overflow: hidden;
 }
-.card__attribute {
+.card__character {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -38,9 +49,24 @@
     border-top: 1px solid #e5e5e5;
     padding: 0 15px;
 }
-.card__attribute__name {
+.card__character__name {
     float: left;
 }
-.card__attribute__value {
+.card__character__value {
     float: right;
+}
+.card__character_active {
+    cursor: pointer;
+}
+.card__character_active:hover {
+    background-color: aqua;
+}
+.compare-card {
+    width: 300px;
+    height: 550px;
+    line-height: 550px;
+    font-size: 50px;
+    border: 3px solid orange;
+    text-align: center;
+    float: left;
 }
