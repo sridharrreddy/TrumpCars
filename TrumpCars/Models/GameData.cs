@@ -20,11 +20,11 @@ namespace TrumpCars.Models
         public AddPlayerResult AddPlayerToGroup(string playerId)
         {
             var result = new AddPlayerResult();
-            var newPlayer = new PlayerGameData {PlayerId = playerId};
+            var newPlayer = new PlayerGameData { PlayerId = playerId };
             var group = Groups.FirstOrDefault(g => g.Players.Count < MaxPlayers);
             if (group == null)
             {
-                var newGroup = new GroupData { Name = Guid.NewGuid().ToString(), Players = new List<PlayerGameData>()};
+                var newGroup = new GroupData { Name = Guid.NewGuid().ToString(), Players = new List<PlayerGameData>() };
                 newPlayer.IsPlayersTurn = true;
                 newGroup.Players.Add(newPlayer);
                 Groups.Add(newGroup);
@@ -40,7 +40,7 @@ namespace TrumpCars.Models
                 var playerIndex = 0;
                 foreach (var playerGameData in group.Players)
                 {
-                    playerGameData.TrumpCards = trumpCards.Skip(playerIndex*CardCount).Take(CardCount).ToList();
+                    playerGameData.TrumpCards = trumpCards.Skip(playerIndex * CardCount).Take(CardCount).ToList();
                     playerGameData.TrumpCards.First().IsActive = true;
                     ++playerIndex;
                 }
@@ -58,7 +58,7 @@ namespace TrumpCars.Models
             var cards = _context.Vehicles
                 .Where(v => v.VehicleCharacteristics.Count() > 4)
                 .OrderBy(c => Guid.NewGuid())
-                .Take(MaxPlayers*CardCount)
+                .Take(MaxPlayers * CardCount)
                 .Select(v => new TrumpCard
                 {
                     Id = v.Id,
@@ -83,7 +83,7 @@ namespace TrumpCars.Models
         public void MakePick(string groupName, string playerId, int carId, string name)
         {
             var group = GetGroupData(groupName);
-            var activePlayer = group.Players.First(p=>p.IsPlayersTurn);
+            var activePlayer = group.Players.First(p => p.IsPlayersTurn);
             var redundantCheck = activePlayer.PlayerId == playerId;
             var activeCard = activePlayer.TrumpCards.First(c => c.IsActive);
             activeCard.CarCharacteristics.First(cc => cc.Name == name).IsPicked = true;
@@ -152,8 +152,8 @@ namespace TrumpCars.Models
                 roomName = groupName,
                 currentGame = new
                 {
-                    isGameFinished = activeCard == null,
-                    cards = playerData.TrumpCards,
+                    isGameFinished = playerData.TrumpCards.Count(c => !c.Finished) == 1,
+                    counter = playerData.TrumpCards.Count(c => !c.Finished),
                     thisRound = new
                     {
                         myTurn = playerData.IsPlayersTurn,
@@ -163,7 +163,7 @@ namespace TrumpCars.Models
                             activeCard.Id,
                             activeCard.Title,
                             activeCard.ImageUrl,
-                            CarCharacteristics = activeCard.CarCharacteristics.Select(c=>new
+                            CarCharacteristics = activeCard.CarCharacteristics.Select(c => new
                             {
                                 c.Name,
                                 c.Value,
