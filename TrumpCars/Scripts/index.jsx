@@ -44,6 +44,7 @@
         var vhub = $.connection.gameHub;
         vhub.client.loadGame = function (data) {
             var gameData = JSON.parse(data);
+            console.log(gameData);
             self.setState(gameData);
         };
         $.connection.hub.start().done(function () {
@@ -51,33 +52,56 @@
         });
 
     },
+    onNextRoundClick: function (groupName) {
+        var vhub = $.connection.gameHub;
+        vhub.server.nextRound(groupName).done(function () {
+            console.log('Invocation of NextRound succeeded');
+        }).fail(function (error) {
+            console.log('Invocation of NextRound failed. Error: ' + error);
+        });
+        //console.log(characteristicName);
+        // $.post('/home/chooseCharacter').done(function (res) {
+        // that.setState({ data: data });
+        // });
+    },
     render: function () {
+        var that = this;
         return (
-            this.state.inGame
+            that.state.inGame
             ?
             <div className="room">
                 <div className="table clearfix">
                     <div className="divider">VS</div>
                     <div className="card-wrapper">
                         <h3>Your Card</h3>
-                        <Card {...this.state.currentGame.thisRound.myCard} Active={this.state.currentGame.thisRound.myTurn} />
+                        <Card {...this.state.currentGame.thisRound.myCard} Active={that.state.currentGame.thisRound.myTurn} GroupName={that.state.roomName} />
                     </div>
                     <div className="card-wrapper">
                         <h3>Your Opponent's Card</h3>
                         {
-                        this.state.currentGame.thisRound.opponentsCard
+                        that.state.currentGame.thisRound.opponentsCard
                         ?
-                        <Card {...this.state.currentGame.thisRound.opponentsCard} Active={false} />
+                        <Card {...that.state.currentGame.thisRound.opponentsCard} Active={false} />
                         :
                         <div className="compare-card">?</div>
                         }
                     </div>
                 </div>
-                <div className="message-bar">{this.state.currentGame.thisRound.myTurn ? 'It is your turn.' : 'Waiting for your opponent to pick.'}</div>
+                <div className="message-bar">{
+                    this.state.currentGame.thisRound.opponentsCard
+                    ? <a href="#" onClick={that.onNextRoundClick.bind(that, that.state.roomName)}>Next Round</a>
+                    :
+                    (
+                        that.state.currentGame.thisRound.myTurn
+                        ? 'It is your turn.'
+                        : 'Waiting for your opponent to pick.'
+                    )
+                }
+                </div>
                 <div className="status-bar">
                     <span>Wins</span>
-                    <span className="status-bar__score status-bar__score_your">3</span>
-                    <span className="status-bar__score status-bar__score_opponent">2</span>
+                    <span className="status-bar__score status-bar__score_your">{that.state.currentGame.thisRound.myScore}</span>
+                    <span className="status-bar__score status-bar__score_opponent">{that.state.currentGame.thisRound.opponentsScore}</span>
                 </div>
             </div>
             :
@@ -87,7 +111,9 @@
 });
 var Card = React.createClass({
     propTypes: {
-        Win: React.PropTypes.bool,
+        Id: React.PropTypes.number.isRequired,
+        GroupName: React.PropTypes.string,
+        Result: React.PropTypes.string,
         Active: React.PropTypes.bool,
         Title: React.PropTypes.string,
         ImageUrl: React.PropTypes.string,
@@ -97,8 +123,14 @@ var Card = React.createClass({
             Picked: React.PropTypes.bool
         }))
     },
-    onCharacteristicClick: function (characteristicName) {
-        console.log(characteristicName);
+    onCharacteristicClick: function (groupName, carId, characteristicName) {
+        var vhub = $.connection.gameHub;
+        vhub.server.makePick({ GroupName: groupName, CarId: carId, CharacteristicName: characteristicName }).done(function () {
+            console.log('Invocation of makePick succeeded');
+        }).fail(function (error) {
+            console.log('Invocation of makePick failed. Error: ' + error);
+        });
+        //console.log(characteristicName);
         // $.post('/home/chooseCharacter').done(function (res) {
             // that.setState({ data: data });
         // });
@@ -109,16 +141,20 @@ var Card = React.createClass({
             <div className="card">
                 <div className="card__title">{that.props.Title}</div>
                 <div className="card__image">
-                    {this.props.Win ? <div className="card__win">Win</div> : ''}
+                    {
+                        that.props.Result === ""
+                        ? ""
+                        : <div className="card__win">{that.props.Result}</div>
+                    }
                     <img src={that.props.ImageUrl} />
                 </div>
                 <ul>
                     {
                         that.props.CarCharacteristics.map(function (characteristic) {
-                            return that.props.Active
+                            return (that.props.Active && that.props.Result === "")
                             ?
                                 (
-                                    <li className={"card__character card__character_active" + (characteristic.Picked ? " card__character_picked" : "")} onClick={that.onCharacteristicClick.bind(that, characteristic.Name)}>
+                                    <li className={"card__character card__character_active" + (characteristic.Picked ? " card__character_picked" : "")} onClick={that.onCharacteristicClick.bind(that, that.props.GroupName, that.props.Id, characteristic.Name)}>
                                         <span className="card__character__name">{characteristic.Name}</span>
                                         <span className="card__character__value">{characteristic.Value}</span>
                                     </li>

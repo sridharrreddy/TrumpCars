@@ -55,24 +55,28 @@ namespace TrumpCars.Models
 
         public List<TrumpCard> GetCards()
         {
-            var cards = _context.Vehicles.Take(MaxPlayers*CardCount).Select(v => new TrumpCard
-            {
-                Id = v.Id,
-                Title = v.MakeModel,
-                ImageUrl = v.ImageUrl,
-                Finished = false,
-                CarCharacteristics = v.VehicleCharacteristics
-                    .Where(vc => vc.Characteristic.Name == "Price (AUD)"
-                                 || vc.Characteristic.Name == "Engine Size (cc)"
-                                 || vc.Characteristic.Name == "Fuel Star Rating"
-                                 || vc.Characteristic.Name == "Performance"
-                                 || vc.Characteristic.Name == "Boot Space Score")
-                    .Select(vc => new CarCharacteristic
-                    {
-                        Name = vc.Characteristic.Name,
-                        Value = vc.Value
-                    }).ToList()
-            }).ToList();
+            var cards = _context.Vehicles
+                .Where(v => v.Id != 1 && v.Id != 2)
+                .OrderBy(c => Guid.NewGuid())
+                .Take(MaxPlayers*CardCount)
+                .Select(v => new TrumpCard
+                {
+                    Id = v.Id,
+                    Title = v.MakeModel,
+                    ImageUrl = v.ImageUrl,
+                    Finished = false,
+                    CarCharacteristics = v.VehicleCharacteristics
+                        .Where(vc => vc.Characteristic.Name == "Price (AUD)"
+                                     || vc.Characteristic.Name == "Engine Size (cc)"
+                                     || vc.Characteristic.Name == "Fuel Star Rating"
+                                     || vc.Characteristic.Name == "Performance"
+                                     || vc.Characteristic.Name == "Boot Space Score")
+                        .Select(vc => new CarCharacteristic
+                        {
+                            Name = vc.Characteristic.Name,
+                            Value = vc.Value
+                        }).ToList()
+                }).ToList();
             return cards;
         }
 
@@ -83,19 +87,43 @@ namespace TrumpCars.Models
             var redundantCheck = activePlayer.PlayerId == playerId;
             var activeCard = activePlayer.TrumpCards.First(c => c.IsActive);
 
-            var opponentPlayer = group.Players.First(p => p.IsPlayersTurn);
+            var opponentPlayer = group.Players.First(p => !p.IsPlayersTurn);
             var opponentActiveCard = opponentPlayer.TrumpCards.First(c => c.IsActive);
 
             if (activeCard.CarCharacteristics.First(cc => cc.Name == name).Value >
                 opponentActiveCard.CarCharacteristics.First(cc => cc.Name == name).Value)
             {
                 activePlayer.Score++;
+                activeCard.Win = true;
             }
-            else if(activeCard.CarCharacteristics.First(cc => cc.Name == name).Value <
-                opponentActiveCard.CarCharacteristics.First(cc => cc.Name == name).Value)
+            else if (activeCard.CarCharacteristics.First(cc => cc.Name == name).Value <
+                     opponentActiveCard.CarCharacteristics.First(cc => cc.Name == name).Value)
             {
                 opponentPlayer.Score++;
+                opponentActiveCard.Win = true;
+                opponentActiveCard.CarCharacteristics.First(cc => cc.Name == name).IsPicked = true;
             }
+            else
+            {
+                group.IsDraw = true;
+            }
+        }
+
+        public void NextRound(string groupName)
+        {
+            var group = GetGroupData(groupName);
+
+            var activePlayer = group.Players.First(p => p.IsPlayersTurn);
+            var activeCard = activePlayer.TrumpCards.First(c => c.IsActive);
+
+            var opponentPlayer = group.Players.First(p => !p.IsPlayersTurn);
+            var opponentActiveCard = opponentPlayer.TrumpCards.First(c => c.IsActive);
+
+            activePlayer.IsPlayersTurn = false;
+            activeCard.Finished = true;
+
+            opponentPlayer.IsPlayersTurn = true;
+            opponentActiveCard.Finished = true;
         }
 
         public string GetClientData(string groupName, string playerId)
@@ -116,6 +144,7 @@ namespace TrumpCars.Models
             var result = new
             {
                 inGame = groupData.Players.Count == MaxPlayers,
+                roomName = groupName,
                 currentGame = new
                 {
                     isGameFinished = activeCard == null,
@@ -125,6 +154,7 @@ namespace TrumpCars.Models
                         myTurn = playerData.IsPlayersTurn,
                         myCard = activeCard == null ? null : new
                         {
+                            Result = opponentsActiveCard == null ? "" : (activeCard.Win ? "Win" : (groupData.IsDraw ? "Draw" : "Loose")),
                             activeCard.Id,
                             activeCard.Title,
                             activeCard.ImageUrl,
@@ -137,6 +167,7 @@ namespace TrumpCars.Models
                         },
                         opponentsCard = opponentsActiveCard == null ? null : new
                         {
+                            Result = opponentsActiveCard.Win ? "Win" : (groupData.IsDraw ? "Draw" : "Loose"),
                             opponentsActiveCard.Id,
                             opponentsActiveCard.Title,
                             opponentsActiveCard.ImageUrl,

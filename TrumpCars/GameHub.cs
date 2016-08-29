@@ -7,17 +7,32 @@ using System.Web.Helpers;
 using Microsoft.AspNet.SignalR;
 using Newtonsoft.Json;
 using TrumpCars.Controllers;
+using TrumpCars.Models;
 
 namespace TrumpCars
 {
     public class GameHub : Hub
     {
-        public void CharacteristicPick(string roomName, int carId, string name, int value)
+        public void MakePick(PlayerPickInput pick)
         {
-            var groupData = HomeController.GameData.GetGroupData(roomName);
-            //groupData.
+            HomeController.GameData.MakePick(pick.GroupName, Context.ConnectionId, pick.CarId, pick.CharacteristicName);
 
-            Clients.OthersInGroup(roomName).compareCharacteristic(name, value);
+            var groupData = HomeController.GameData.GetGroupData(pick.GroupName);
+            foreach (var playerGameData in groupData.Players)
+            {
+                Clients.Client(playerGameData.PlayerId).loadGame(HomeController.GameData.GetClientData(pick.GroupName, playerGameData.PlayerId));
+            }
+        }
+
+        public void NextRound(string groupName)
+        {
+            HomeController.GameData.NextRound(groupName);
+
+            var groupData = HomeController.GameData.GetGroupData(groupName);
+            foreach (var playerGameData in groupData.Players)
+            {
+                Clients.Client(playerGameData.PlayerId).loadGame(HomeController.GameData.GetClientData(groupName, playerGameData.PlayerId));
+            }
         }
 
         public async Task JoinRoom(string roomName)

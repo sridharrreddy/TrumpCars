@@ -9,6 +9,7 @@ namespace TrumpCars.Models
     public class GroupData
     {
         public string Name { get; set; }
+        public bool IsDraw { get; set; }
         public List<PlayerGameData> Players { get; set; }
     }
 }

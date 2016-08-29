@@ -13,5 +13,6 @@ namespace TrumpCars.Models
         public List<CarCharacteristic> CarCharacteristics { get; set; }
         public bool Finished { get; set; }
         public bool IsActive { get; set; }
+        public bool Win { get; set; }
     }
 }
