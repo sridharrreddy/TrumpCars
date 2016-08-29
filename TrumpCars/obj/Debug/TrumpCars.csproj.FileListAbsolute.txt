@@ -97,6 +97,8 @@ C:\Team\trumpcars\TrumpCars\bin\TrumpCars.dll
 C:\Team\trumpcars\TrumpCars\bin\TrumpCars.pdb
 C:\Team\trumpcars\TrumpCars\bin\Antlr3.Runtime.dll
 C:\Team\trumpcars\TrumpCars\bin\ClearScript.dll
+C:\Team\trumpcars\TrumpCars\bin\EntityFramework.dll
+C:\Team\trumpcars\TrumpCars\bin\EntityFramework.SqlServer.dll
 C:\Team\trumpcars\TrumpCars\bin\JavaScriptEngineSwitcher.Core.dll
 C:\Team\trumpcars\TrumpCars\bin\JavaScriptEngineSwitcher.Msie.dll
 C:\Team\trumpcars\TrumpCars\bin\JavaScriptEngineSwitcher.V8.dll
@@ -127,6 +129,8 @@ C:\Team\trumpcars\TrumpCars\bin\System.Web.WebPages.Razor.dll
 C:\Team\trumpcars\TrumpCars\bin\VroomJs.dll
 C:\Team\trumpcars\TrumpCars\bin\WebActivatorEx.dll
 C:\Team\trumpcars\TrumpCars\bin\WebGrease.dll
+C:\Team\trumpcars\TrumpCars\bin\EntityFramework.xml
+C:\Team\trumpcars\TrumpCars\bin\EntityFramework.SqlServer.xml
 C:\Team\trumpcars\TrumpCars\bin\JSPool.xml
 C:\Team\trumpcars\TrumpCars\bin\Microsoft.AspNet.SignalR.Core.xml
 C:\Team\trumpcars\TrumpCars\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
@@ -154,7 +158,3 @@ C:\Team\trumpcars\TrumpCars\bin\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
 C:\Team\trumpcars\TrumpCars\bin\ru-ru\MsieJavaScriptEngine.resources.dll
 C:\Team\trumpcars\TrumpCars\obj\Debug\TrumpCars.dll
 C:\Team\trumpcars\TrumpCars\obj\Debug\TrumpCars.pdb
-C:\Team\trumpcars\TrumpCars\bin\EntityFramework.dll
-C:\Team\trumpcars\TrumpCars\bin\EntityFramework.SqlServer.dll
-C:\Team\trumpcars\TrumpCars\bin\EntityFramework.xml
-C:\Team\trumpcars\TrumpCars\bin\EntityFramework.SqlServer.xml
