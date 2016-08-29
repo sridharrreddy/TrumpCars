@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Helpers;
 using Microsoft.AspNet.SignalR;
+using Newtonsoft.Json;
+using TrumpCars.Controllers;
 
 namespace TrumpCars
 {
@@ -14,9 +17,23 @@ namespace TrumpCars
             Clients.OthersInGroup(roomName).addChatMessage(name, value);
         }
 
-        public Task JoinRoom(string roomName)
+        public async Task JoinRoom(string roomName)
         {
-            return Groups.Add(Context.ConnectionId, roomName);
+            var result = HomeController.GameData.AddPlayerToGroup(Context.ConnectionId);
+            await Groups.Add(Context.ConnectionId, result.GroupName);
+            var groupData = HomeController.GameData.GetGroupData(result.GroupName);
+            if (groupData.Players.Count() == HomeController.GameData.MaxPlayers)
+            {
+                foreach (var playerGameData in groupData.Players)
+                {
+                    Clients.Group(result.GroupName, groupData.Players.Where(p=> p.PlayerId!= playerGameData.PlayerId).Select(p=>p.PlayerId).ToArray())
+                        .loadGame(result.GroupName, JsonConvert.SerializeObject(playerGameData.TrumpCards));
+                }
+            }
+            else
+            {
+                Clients.Group(result.GroupName).userJoined(result.GroupName);
+            }
         }
 
         public Task LeaveRoom(string roomName)

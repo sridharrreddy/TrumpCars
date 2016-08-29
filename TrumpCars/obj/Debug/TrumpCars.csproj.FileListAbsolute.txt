@@ -158,3 +158,4 @@ C:\Team\trumpcars\TrumpCars\bin\EntityFramework.dll
 C:\Team\trumpcars\TrumpCars\bin\EntityFramework.SqlServer.dll
 C:\Team\trumpcars\TrumpCars\bin\EntityFramework.xml
 C:\Team\trumpcars\TrumpCars\bin\EntityFramework.SqlServer.xml
+C:\Team\trumpcars\TrumpCars\obj\Debug\TrumpCars.csprojResolveAssemblyReference.cache
