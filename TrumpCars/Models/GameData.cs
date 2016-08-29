@@ -153,7 +153,7 @@ namespace TrumpCars.Models
                 currentGame = new
                 {
                     isGameFinished = activeCard == null,
-                    cards = playerData.TrumpCards,
+                    counter = playerData.TrumpCards.Count(c=>!c.Finished),
                     thisRound = new
                     {
                         myTurn = playerData.IsPlayersTurn,
