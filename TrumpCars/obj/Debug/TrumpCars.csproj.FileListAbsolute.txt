@@ -158,4 +158,3 @@ C:\Team\trumpcars\TrumpCars\bin\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
 C:\Team\trumpcars\TrumpCars\bin\ru-ru\MsieJavaScriptEngine.resources.dll
 C:\Team\trumpcars\TrumpCars\obj\Debug\TrumpCars.dll
 C:\Team\trumpcars\TrumpCars\obj\Debug\TrumpCars.pdb
-C:\Team\trumpcars\TrumpCars\obj\Debug\TrumpCars.csprojResolveAssemblyReference.cache
