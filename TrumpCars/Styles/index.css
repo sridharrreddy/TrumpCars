@@ -163,10 +163,10 @@
     background-color: green;
 }
 .status-bar__counter {
-    margin-left: 200px;
-    margin-right: 200px;
+    margin-left: 180px;
+    margin-right: 180px;
     font-size: 20px;
 }
 .lose-pic img {
-    width: 400px;
+    width: 750px;
 }
