@@ -14,21 +14,36 @@
 .clearfix { display: inline-block; }
 
 .room {
-    width: 1020px;
+    width: 800px;
     margin: 0 auto;
     font-family: Helvetica, Arial;
+}
+.table {
+    position: relative;
+}
+.table .divider {
+    position: absolute;
+    top: 250px;
+    left: 350px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 75px;
 }
 .card-wrapper {
     float: left;
 }
+.card-wrapper:last-child {
+    float: right;
+}
 .card {
     background-color: #fff;
-    border: 1px solid #e5e5e5;
+    border: 15px solid #e5e5e5;
+    border-radius: 10px;
     font-size: 13px;
     padding: 0;
     position: relative;
     width: 300px;
     height: 550px;
+    box-sizing: content-box;
 }
 .card__title {
     background-color: #f7f7f7;
@@ -36,6 +51,14 @@
     height: 80px;
     font-size: 18px;
     line-height: 80px;
+    text-align: center;
+}
+.card__win {
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    background-color: red;
+    font-size: 30px;
     text-align: center;
 }
 .card__image {
@@ -63,11 +86,36 @@
 .card__character_active:hover {
     background-color: aqua;
 }
+.card__character_picked {
+    border: 1px solid red;
+}
 .compare-card {
     width: 300px;
     height: 550px;
     line-height: 550px;
-    font-size: 50px;
-    border: 3px solid orange;
+    font-size: 200px;
+    border: 15px solid orange;
+    border-radius: 10px;
     text-align: center;
+    box-sizing: content-box;
+}
+.message-bar {
+    border: 1px solid #ddd;
+}
+.status-bar span {
+    display: inline-block
+}
+.status-bar__score {
+    width: 50px;
+    height: 40px;
+    line-height: 40px;
+    border: 1px solid #ddd;
+    font-size: 30px;
+    margin-left: 10px;
+}
+.status-bar__score_your {
+    background-color: red;
+}
+.status-bar__score_opponent {
+    background-color: green;
 }

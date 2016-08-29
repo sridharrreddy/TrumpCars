@@ -7,10 +7,11 @@
                 thisRound: { //Only one user will take a pick per round
                     myTurn: true, //Is this user supposed to make the choice, or wait for other user?
                     myCard: {
+                        "Win": true,
                         "Id": 1,
                         "Title": "2016 Mercedes-Benz E300",
                         "ImageUrl": "http://d3lp4xedbqa8a5.cloudfront.net/imagegen/max/ccr/300/-/s3/digital-cougar-assets/traderspecs/2016/08/23/Misc/MercedesBenz-E-220-CDI-Sedan-2015-1.jpg",
-                        "CarCharacteristics": [{ "Name": "RRP", "Value": 10 }, { "Name": "GreenHouseRating", "Value": 120 }]
+                        "CarCharacteristics": [{ "Name": "RRP", "Value": 10, "Picked": true }, { "Name": "GreenHouseRating", "Value": 120 }]
                     },
                     opponentsCard: {
                         showCard: false, //Should be displayed only when user made his pick
@@ -49,9 +50,10 @@
         return (
             <div className="room">
                 <div className="table clearfix">
+                    <div className="divider">VS</div>
                     <div className="card-wrapper">
                         <h3>Your Card</h3>
-                        <Card {...this.state.currentGame.thisRound.myCard} Active={this.state.data.currentGame.thisRound.myTurn} />
+                        <Card {...this.state.currentGame.thisRound.myCard} Active={this.state.currentGame.thisRound.myTurn} />
                     </div>
                     <div className="card-wrapper">
                         <h3>Your Opponent's Card</h3>
@@ -67,8 +69,8 @@
                 <div className="message-bar">{this.state.currentGame.thisRound.myTurn ? 'It is your turn.' : 'Waiting for your opponent to pick.'}</div>
                 <div className="status-bar">
                     <span>Wins</span>
-                    <span className="status-bar__your-score">3</span>
-                    <span className="status-bar__opponent-score">2</span>
+                    <span className="status-bar__score status-bar__score_your">3</span>
+                    <span className="status-bar__score status-bar__score_opponent">2</span>
                 </div>
             </div>
         );
@@ -76,12 +78,14 @@
 });
 var Card = React.createClass({
     propTypes: {
+        Win: React.PropTypes.bool,
         Active: React.PropTypes.bool,
         Title: React.PropTypes.string,
         ImageUrl: React.PropTypes.string,
         CarCharacteristics: React.PropTypes.arrayOf(React.PropTypes.shape({
             Name: React.PropTypes.string.isRequired,
-            Value: React.PropTypes.number.isRequired
+            Value: React.PropTypes.number.isRequired,
+            Picked: React.PropTypes.bool
         }))
     },
     onCharacteristicClick: function (characteristicName) {
@@ -95,21 +99,24 @@ var Card = React.createClass({
         return (
             <div className="card">
                 <div className="card__title">{that.props.Title}</div>
-                <div className="card__image"><img src={that.props.ImageUrl} /></div>
+                <div className="card__image">
+                    {this.props.Win ? <div className="card__win">Win</div> : ''}
+                    <img src={that.props.ImageUrl} />
+                </div>
                 <ul>
                     {
                         that.props.CarCharacteristics.map(function (characteristic) {
                             return that.props.Active
                             ?
                                 (
-                                    <li className="card__character card__character_active" onClick={that.onCharacteristicClick.bind(that, characteristic.Name)}>
+                                    <li className={"card__character card__character_active" + (characteristic.Picked ? " card__character_picked" : "")} onClick={that.onCharacteristicClick.bind(that, characteristic.Name)}>
                                         <span className="card__character__name">{characteristic.Name}</span>
                                         <span className="card__character__value">{characteristic.Value}</span>
                                     </li>
                                 )
                             :
                                 (
-                                    <li className="card__character">
+                                    <li className={"card__character" + (characteristic.Picked ? " card__character_picked" : "")}>
                                         <span className="card__character__name">{characteristic.Name}</span>
                                         <span className="card__character__value">{characteristic.Value}</span>
                                     </li>
@@ -123,6 +130,6 @@ var Card = React.createClass({
 });
 
 ReactDOM.render(
-    <GameRoom CardData={data} />,
+    <GameRoom />,
     document.getElementById('content')
 );
