@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
 
 namespace TrumpCars.Models
 {
@@ -9,6 +10,5 @@ namespace TrumpCars.Models
     {
         public string Name { get; set; }
         public List<PlayerGameData> Players { get; set; }
-        public List<TrumpCard> TrumpCards { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using TrumpCars.Entities;
 
 namespace TrumpCars.Models
@@ -16,14 +17,15 @@ namespace TrumpCars.Models
         public int CardCount { get; set; }
         public List<GroupData> Groups { get; set; }
 
-        public AddPlayerResult AddPlayerToGroup(string connectionId)
+        public AddPlayerResult AddPlayerToGroup(string playerId)
         {
             var result = new AddPlayerResult();
-            var newPlayer = new PlayerGameData {PlayerId = connectionId};
+            var newPlayer = new PlayerGameData {PlayerId = playerId};
             var group = Groups.FirstOrDefault(g => g.Players.Count < MaxPlayers);
             if (group == null)
             {
-                var newGroup = new GroupData { Name = Guid.NewGuid().ToString(), Players = new List<PlayerGameData>(), TrumpCards = new List<TrumpCard>()};
+                var newGroup = new GroupData { Name = Guid.NewGuid().ToString(), Players = new List<PlayerGameData>()};
+                newPlayer.IsPlayersTurn = true;
                 newGroup.Players.Add(newPlayer);
                 Groups.Add(newGroup);
                 result.IsGroupFull = false;
@@ -32,7 +34,7 @@ namespace TrumpCars.Models
             else
             {
                 group.Players.Add(newPlayer);
-                result.IsGroupFull = true;
+                result.IsGroupFull = group.Players.Count() == this.MaxPlayers;
                 result.GroupName = group.Name;
                 var trumpCards = GetCards();
                 var playerIndex = 0;
@@ -72,6 +74,86 @@ namespace TrumpCars.Models
                     }).ToList()
             }).ToList();
             return cards;
+        }
+
+        public void MakePick(string groupName, string playerId, int carId, string name)
+        {
+            var group = GetGroupData(groupName);
+            var activePlayer = group.Players.First(p=>p.IsPlayersTurn);
+            var redundantCheck = activePlayer.PlayerId == playerId;
+            var activeCard = activePlayer.TrumpCards.First(c => c.IsActive);
+
+            var opponentPlayer = group.Players.First(p => p.IsPlayersTurn);
+            var opponentActiveCard = opponentPlayer.TrumpCards.First(c => c.IsActive);
+
+            if (activeCard.CarCharacteristics.First(cc => cc.Name == name).Value >
+                opponentActiveCard.CarCharacteristics.First(cc => cc.Name == name).Value)
+            {
+                activePlayer.Score++;
+            }
+            else if(activeCard.CarCharacteristics.First(cc => cc.Name == name).Value <
+                opponentActiveCard.CarCharacteristics.First(cc => cc.Name == name).Value)
+            {
+                opponentPlayer.Score++;
+            }
+        }
+
+        public string GetClientData(string groupName, string playerId)
+        {
+            var groupData = GetGroupData(groupName);
+
+            var playerData = groupData.Players.First(p => p.PlayerId == playerId);
+            TrumpCard activeCard = null;
+            if (playerData.TrumpCards.Any(c => !c.Finished))
+            {
+                activeCard = playerData.TrumpCards.First(c => !c.Finished);
+                activeCard.IsActive = true;
+            }
+
+            var opponentData = groupData.Players.First(p => p.PlayerId != playerId);
+            TrumpCard opponentsActiveCard = opponentData.TrumpCards.FirstOrDefault(c => c.CarCharacteristics.Any(cc => cc.IsPicked));
+
+            var result = new
+            {
+                inGame = groupData.Players.Count == MaxPlayers,
+                currentGame = new
+                {
+                    isGameFinished = activeCard == null,
+                    cards = playerData.TrumpCards,
+                    thisRound = new
+                    {
+                        myTurn = playerData.IsPlayersTurn,
+                        myCard = activeCard == null ? null : new
+                        {
+                            activeCard.Id,
+                            activeCard.Title,
+                            activeCard.ImageUrl,
+                            CarCharacteristics = activeCard.CarCharacteristics.Select(c=>new
+                            {
+                                c.Name,
+                                c.Value,
+                                c.IsPicked
+                            }).ToList()
+                        },
+                        opponentsCard = opponentsActiveCard == null ? null : new
+                        {
+                            opponentsActiveCard.Id,
+                            opponentsActiveCard.Title,
+                            opponentsActiveCard.ImageUrl,
+                            CarCharacteristics = opponentsActiveCard.CarCharacteristics.Select(c => new
+                            {
+                                c.Name,
+                                c.Value,
+                                c.IsPicked
+                            }).ToList()
+                        },
+                        myScore = playerData.Score,
+                        opponentsScore = opponentData.Score
+                    }
+                }
+            };
+
+            return JsonConvert.SerializeObject(result);
         }
     }
 }

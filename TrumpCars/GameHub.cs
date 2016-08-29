@@ -14,8 +14,10 @@ namespace TrumpCars
     {
         public void CharacteristicPick(string roomName, int carId, string name, int value)
         {
-            Clients.OthersInGroup(roomName).compareCharacteristic(name, value);
+            var groupData = HomeController.GameData.GetGroupData(roomName);
+            //groupData.
 
+            Clients.OthersInGroup(roomName).compareCharacteristic(name, value);
         }
 
         public async Task JoinRoom(string roomName)
@@ -23,16 +25,16 @@ namespace TrumpCars
             var result = HomeController.GameData.AddPlayerToGroup(Context.ConnectionId);
             await Groups.Add(Context.ConnectionId, result.GroupName);
             var groupData = HomeController.GameData.GetGroupData(result.GroupName);
-            if (groupData.Players.Count() == HomeController.GameData.MaxPlayers)
+            if (result.IsGroupFull)
             {
                 foreach (var playerGameData in groupData.Players)
                 {
-                    Clients.Client(playerGameData.PlayerId).loadGame(result.GroupName, JsonConvert.SerializeObject(playerGameData.TrumpCards));
+                    Clients.Client(playerGameData.PlayerId).loadGame(HomeController.GameData.GetClientData(result.GroupName, playerGameData.PlayerId));
                 }
             }
             else
             {
-                Clients.Group(result.GroupName).userJoined(result.GroupName);
+                Clients.Client(Context.ConnectionId).loadGame(HomeController.GameData.GetClientData(result.GroupName, Context.ConnectionId));
             }
         }
 
