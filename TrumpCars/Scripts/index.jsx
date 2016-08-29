@@ -123,6 +123,8 @@
                 <div className="status-bar">
                     <span>Wins</span>
                     <span className="status-bar__score status-bar__score_your">{this.state.currentGame.thisRound.myScore}</span>
+                    <span className="status-bar__counter">{this.state.currentGame.counter == 0 ? 'Finished' : this.state.currentGame.counter + 'rounds to go'}</span>
+                    <span>Loses</span>
                     <span className="status-bar__score status-bar__score_opponent">{this.state.currentGame.thisRound.opponentsScore}</span>
                 </div>
             </div>

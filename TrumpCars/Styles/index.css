@@ -142,7 +142,7 @@
     text-align: center;
 }
 .status-bar span {
-    display: inline-block
+    display: inline-block;
 }
 .status-bar {
     margin-top: 20px;
@@ -161,6 +161,11 @@
 }
 .status-bar__score_opponent {
     background-color: green;
+}
+.status-bar__counter {
+    margin-left: 200px;
+    margin-right: 200px;
+    font-size: 20px;
 }
 .lose-pic img {
     width: 400px;
