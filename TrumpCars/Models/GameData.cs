@@ -108,6 +108,10 @@ namespace TrumpCars.Models
             {
                 group.IsDraw = true;
             }
+            if (activePlayer.TrumpCards.Count(c => !c.Finished) == 1)
+            {
+                NextRound(groupName);
+            }
         }
 
         public void NextRound(string groupName)
@@ -152,7 +156,7 @@ namespace TrumpCars.Models
                 roomName = groupName,
                 currentGame = new
                 {
-                    isGameFinished = playerData.TrumpCards.Count(c => !c.Finished) == 1,
+                    isGameFinished = playerData.TrumpCards.All(c => c.Finished),
                     counter = playerData.TrumpCards.Count(c => !c.Finished),
                     thisRound = new
                     {
