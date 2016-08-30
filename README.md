@@ -1,8 +1,7 @@
-@michaelyipbauer :> trump card data
-1: Import data from WhichCar to game db
-2: Find a set of data to be used in the game, where features between the cars are close to other cars', to make the game fair to play
+# Winning project at 2016 Hackathon BauerNZ #
 
-@FrankMa :> trump card UI and interaction
-1: First get the non-interactive UI resembling WhichCar search result tiles
-2: Then get the data from web api and populate the tile
-3: Next, make the tile interactive, passing click data (feature-value/user info) to server
+Preview of the game
+
+![trump-car.png](https://bitbucket.org/repo/8LM4oB/images/1610584410-trump-car.png)
+
+Really proud of us @FrankMa and @michaelyipbauer. Cheers!
