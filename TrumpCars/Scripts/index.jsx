@@ -92,13 +92,7 @@
                             </div>
                             <div className="card-wrapper">
                                 <h3>Your Opponent's Card</h3>
-                                {
-                                    this.state.currentGame.thisRound.opponentsCard != null
-                                    ?
-                                    <Card {...this.state.currentGame.thisRound.opponentsCard} Active={false} />
-                                    :
-                                    <div className="compare-card">?</div>
-                                }
+                                <Card {...this.state.currentGame.thisRound.opponentsCard} Active={false} IsOpponent={this.state.currentGame.thisRound.opponentsCard == null} />
                             </div>
                         </div>
                         <div className="message-bar">
@@ -138,15 +132,16 @@
 });
 var Card = React.createClass({
     propTypes: {
-        Id: React.PropTypes.number.isRequired,
+        IsOpponent: React.PropTypes.bool,
+        Id: React.PropTypes.number,
         GroupName: React.PropTypes.string,
         Result: React.PropTypes.string,
         Active: React.PropTypes.bool,
         Title: React.PropTypes.string,
         ImageUrl: React.PropTypes.string,
         CarCharacteristics: React.PropTypes.arrayOf(React.PropTypes.shape({
-            Name: React.PropTypes.string.isRequired,
-            Value: React.PropTypes.number.isRequired,
+            Name: React.PropTypes.string,
+            Value: React.PropTypes.number,
             Picked: React.PropTypes.bool
         }))
     },
@@ -165,37 +160,46 @@ var Card = React.createClass({
     render: function () {
         var that = this;
         return (
-            <div className="card">
-                <div className="card__title">{that.props.Title}</div>
-                <div className="card__image">
-                    {
-                        that.props.Result === ""
-                        ? ""
-                        : <div className="card__win">{that.props.Result}</div>
-                    }
-                    <img src={that.props.ImageUrl} />
-                </div>
-                <ul>
-                    {
-                        that.props.CarCharacteristics.map(function (characteristic) {
-                            return (that.props.Active && that.props.Result === "")
-                            ?
+            <div className={"card" + (that.props.IsOpponent ? " opponent-card" : "")}>
+                <div className="card__front">
+                    {!that.props.IsOpponent ?
+                    <div>
+                        <div className="card__title">{that.props.Title}</div>
+                        <div className="card__image">
+                            {
+                            that.props.Result === ""
+                            ? ""
+                            : <div className="card__win">{that.props.Result}</div>
+                            }
+                            <img src={that.props.ImageUrl} />
+                        </div>
+                        <ul>
+                            {
+                            that.props.CarCharacteristics.map(function (characteristic) {
+                                return (that.props.Active && that.props.Result === "")
+                                ?
                                 (
-                                    <li className={"card__character card__character_active" + (characteristic.IsPicked ? " card__character_picked" : "")} onClick={that.onCharacteristicClick.bind(that, that.props.GroupName, that.props.Id, characteristic.Name)}>
-                                        <span className="card__character__name">{characteristic.Name}</span>
-                                        <span className="card__character__value">{characteristic.Value}</span>
-                                    </li>
-                                )
+                                            <li className={"card__character card__character_active" + (characteristic.IsPicked ? " card__character_picked" : "")} onClick={that.onCharacteristicClick.bind(that, that.props.GroupName, that.props.Id, characteristic.Name)}>
+                                                <span className="card__character__name">{characteristic.Name}</span>
+                                                <span className="card__character__value">{characteristic.Value}</span>
+                                            </li>
+                            )
                             :
-                                (
-                                    <li className={"card__character" + (characteristic.IsPicked ? " card__character_picked" : "")}>
-                                        <span className="card__character__name">{characteristic.Name}</span>
-                                        <span className="card__character__value">{characteristic.Value}</span>
-                                    </li>
-                                );
-                        })
+                            (
+                                            <li className={"card__character" + (characteristic.IsPicked ? " card__character_picked" : "")}>
+                                                <span className="card__character__name">{characteristic.Name}</span>
+                                                <span className="card__character__value">{characteristic.Value}</span>
+                                            </li>
+                            );
+                            })
+                            }
+                        </ul>
+                    </div>
+                    :
+                    ""
                     }
-                </ul>
+                </div>
+                <div className="card__back">?</div>
             </div>
         );
     }
