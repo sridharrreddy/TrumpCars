@@ -1,4 +1,6 @@
-# Winning project at 2016 Hackathon BauerNZ
+# Trump Cars
+
+### Winning project at 2016 Hackathon BauerNZ
 
 ### Screenshot of the game
 
