@@ -9,10 +9,10 @@
 ### Tech Stack 
 - ASP.Net MVC
 - ReactJs.Net
-- Signal R
+- SignalR
 - SQL Server
 
 ### How the stack works
-- ASP.Net and SQL Server manage data and business logic of the game
+- ASP.Net and SQL Server manage business logic and data of the game
 - SignalR allows the clients to communicate with each other immediately (with server only having to worry about game state)
-- ReactJs.Net refreshes the page as and when the game state changes
+- ReactJs.Net refreshes the page as & when the game state change
